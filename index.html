@@ -1,12 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Job Tracking Website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    
+  <div class="container">
+    <h1>Job Tracking</h1>
+    <form id="job-form">
+      <div class="form-group">
+        <label for="job-name">Job Name</label>
+        <input type="text" class="form-control" id="job-name" placeholder="Enter job name">
+      </div>
+      <div class="form-group">
+        <label for="salary">Salary</label>
+        <input type="text" class="form-control" id="salary" placeholder="Enter salary">
+      </div>
+      <div class="form-group">
+        <label for="date-applied">Date Applied</label>
+        <input type="date" class="form-control" id="date-applied">
+      </div>
+       <div class="form-group">
+        <label for="note">Note</label>
+        <textarea class="form-control" id="note" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br>
+    <h2>Job List</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Job Name</th>
+          <th>Salary</th>
+          <th>Date Applied</th>
+          <th>Note</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="job-list">
+        <!-- Job listings will be added here -->
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
