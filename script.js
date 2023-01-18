@@ -69,3 +69,5 @@ jobForm.addEventListener("submit", function(event) {
   dateAppliedInput.value = "";
   noteInput.value = "";
 });
+
+
