@@ -34,17 +34,23 @@ jobForm.addEventListener("submit", function(event) {
 
   // Create a "Save" button
   const saveButton = document.createElement("button");
-  saveButton.classList.add("btn", "btn-success", "btn-sm", "float-right");
+  saveButton.classList.add("btn", "btn-success", "btn-sm", );
   saveButton.textContent = "Save";
   saveButton.addEventListener("click", function() {
+    localStorage.setItem("jobName", jobName);
     // code to handle save button click event
     console.log(`Saving ${jobName}`)
   });
   actionsData.appendChild(saveButton);
+  // Retrieve saved jobName from local storage on page reload
+const savedJobName = localStorage.getItem("jobName");
+if(savedJobName){
+    jobName = savedJobName;
+}
 
   // Create a "Delete" button
   const deleteButton = document.createElement("button");
-  deleteButton.classList.add("btn", "btn-danger", "btn-sm", "float-right");
+  deleteButton.classList.add("btn", "btn-danger", "btn-sm", );
   deleteButton.textContent = "Delete";
   deleteButton.addEventListener("click", function() {
     // code to handle delete button click event
