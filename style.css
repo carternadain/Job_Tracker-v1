@@ -4,8 +4,9 @@
   
   .modern-square {
     width: 510px;
-    height: 412px;
-    margin: 0 auto; /*center the container*/
-    background-color: #2ac74c; /* you can adjust the color as desired*/
-    box-shadow: 0px 0px 10px 0px
+    height: 450px;
+    margin: 0 auto; 
+    background-color: #ffe5b4;
+    box-shadow: 0px 0px 10px 0px;
+    border-radius: 10px;
   }
