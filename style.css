@@ -1,3 +1,10 @@
+body {
+  font-family: monospace, sans-serif;
+  font-weight: bolder;
+}
+
+
+
 .spaced-buttons{
     margin-right: 5px;
   }
@@ -6,11 +13,19 @@
     width: 510px;
     height: 450px;
     margin: 0 auto; 
-    background-color: #f5f5dc;
+    background-color: #949491;
     box-shadow: 0px 0px 10px 0px;
     border-radius: 10px;
   }
 
   #joblist {
     margin-left: 20px; 
+  }
+
+  .list-unstyled li a {
+    color: black;
+  }
+  
+  #paragraph1{
+    font-size: large;
   }
