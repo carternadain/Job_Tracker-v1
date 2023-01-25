@@ -5,6 +5,25 @@ const salaryInput = document.getElementById("salary");
 const dateAppliedInput = document.getElementById("date-applied");
 const noteInput = document.getElementById("note");
 
+const savedJobName = localStorage.getItem("jobName");
+const savedSalary = localStorage.getItem("salary");
+const savedDateApplied = localStorage.getItem("dateApplied");
+const savedNote = localStorage.getItem("note");
+
+if(savedJobName){
+  jobNameInput.value = savedJobName;
+}
+if(savedSalary){
+  salaryInput.value = savedSalary;
+}
+if(savedDateApplied){
+  dateAppliedInput.value = savedDateApplied;
+}
+if(savedNote){
+  noteInput.value = savedNote;
+}
+
+
 // Listen for the form's submit event
 jobForm.addEventListener("submit", function(event) {
   // Prevent the form from sending data to the server
@@ -36,15 +55,14 @@ jobForm.addEventListener("submit", function(event) {
 const saveButton = document.createElement("button");
 saveButton.classList.add("btn", "btn-success", "btn-sm", "spaced-buttons");
 saveButton.textContent = "Save";
-
-// Retrieve saved jobName from local storage on page reload
-const savedJobName = localStorage.getItem("jobName");
-
 saveButton.addEventListener("click", function() {
-    let jobName = savedJobName ? savedJobName : '';
-    // Save jobName to local storage
-    localStorage.setItem("jobName", jobName);
-    console.log(`Saving ${jobName}`)
+    // Save input values to local storage
+    localStorage.setItem("jobName", jobNameInput.value);
+    localStorage.setItem("salary", salaryInput.value);
+    localStorage.setItem("dateApplied", dateAppliedInput.value);
+    localStorage.setItem("note", noteInput.value);
+    
+    console.log(`Saving ${jobNameInput.value}`)
 });
 actionsData.appendChild(saveButton);
 
@@ -57,6 +75,10 @@ actionsData.appendChild(saveButton);
     // code to handle delete button click event
     console.log(`Deleting ${jobName}`)
     newRow.remove();
+    localStorage.removeItem("jobName");
+    localStorage.removeItem("salary");
+    localStorage.removeItem("dateApplied");
+    localStorage.removeItem("note");
   });
   actionsData.appendChild(deleteButton);
 
@@ -77,4 +99,28 @@ actionsData.appendChild(saveButton);
   noteInput.value = "";
 });
 
+// Get all the links with the class "nav-link"
+const navLinks = document.querySelectorAll('.nav-link');
 
+// Add a click event listener to each link
+navLinks.forEach(link => {
+  link.addEventListener('click', event => {
+    // Prevent the default link behavior
+    event.preventDefault();
+
+    // Get the target element's id
+    const targetId = event.target.getAttribute('href');
+
+    // Get the target element
+    const targetElement = document.querySelector(targetId);
+
+    // Calculate the top position of the target element
+    const targetPosition = targetElement.getBoundingClientRect().top;
+
+    // Apply the smooth scrolling effect
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+  });
+});
