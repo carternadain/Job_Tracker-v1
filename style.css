@@ -29,3 +29,7 @@ body {
   #paragraph1{
     font-size: large;
   }
+
+  .row
+   {  padding: 20px;
+  }
