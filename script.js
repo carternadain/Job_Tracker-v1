@@ -5,99 +5,143 @@ const salaryInput = document.getElementById("salary");
 const dateAppliedInput = document.getElementById("date-applied");
 const noteInput = document.getElementById("note");
 
-const savedJobName = localStorage.getItem("jobName");
-const savedSalary = localStorage.getItem("salary");
-const savedDateApplied = localStorage.getItem("dateApplied");
-const savedNote = localStorage.getItem("note");
+// Retrieve saved entries from local storage
+const savedEntries = JSON.parse(localStorage.getItem("jobEntries")) || [];
 
-if(savedJobName){
-  jobNameInput.value = savedJobName;
-}
-if(savedSalary){
-  salaryInput.value = savedSalary;
-}
-if(savedDateApplied){
-  dateAppliedInput.value = savedDateApplied;
-}
-if(savedNote){
-  noteInput.value = savedNote;
+// Function to create table row from entry data
+function createTableRow(entry) {
+  const newRow = document.createElement("tr");
+  Object.values(entry).forEach(value => {
+    const dataElement = createDataElement(value);
+    newRow.appendChild(dataElement);
+  });
+
+  // Create actions data element with buttons
+  const actionsData = document.createElement("td");
+  const saveButton = createButton("Save", "btn-success", handleSave);
+  const deleteButton = createButton("Delete", "btn-danger", handleDelete);
+  actionsData.appendChild(saveButton);
+  actionsData.appendChild(deleteButton);
+  newRow.appendChild(actionsData);
+
+  return newRow;
 }
 
+// Function to create table data element
+function createDataElement(content) {
+  const dataElement = document.createElement("td");
+  dataElement.textContent = content;
+  return dataElement;
+}
 
-// Listen for the form's submit event
-jobForm.addEventListener("submit", function(event) {
-  // Prevent the form from sending data to the server
+// Function to create button element
+function createButton(text, className, clickHandler) {
+  const button = document.createElement("button");
+  button.classList.add("btn", className, "btn-sm", "spaced-buttons");
+  button.textContent = text;
+  button.addEventListener("click", clickHandler);
+  return button;
+}
+
+// Function to handle save button click event
+function handleSave(event) {
+  const row = event.target.closest('tr');
+  const entry = getEntryFromRow(row);
+
+  // Find the index of the existing entry in savedEntries
+  const index = savedEntries.findIndex(e => e.jobName === entry.jobName);
+
+  // If the entry already exists, update it; otherwise, add it
+  if (index !== -1) {
+    savedEntries[index] = entry;
+  } else {
+    savedEntries.push(entry);
+  }
+
+  // Save the updated array back to local storage
+  localStorage.setItem("jobEntries", JSON.stringify(savedEntries));
+
+  console.log(`Saving ${entry.jobName}`);
+}
+
+// Function to handle delete button click event
+function handleDelete(event) {
+  const row = event.target.closest('tr');
+  const entry = getEntryFromRow(row);
+
+  // Remove the row from the table
+  row.remove();
+
+  // Remove the entry from the savedEntries array
+  removeEntry(entry);
+
+  console.log(`Deleting ${entry.jobName}`);
+}
+
+// Function to get entry data from a table row
+function getEntryFromRow(row) {
+  const jobName = row.querySelector('td:first-child').textContent;
+  const salary = row.querySelector('td:nth-child(2)').textContent;
+  const dateApplied = row.querySelector('td:nth-child(3)').textContent;
+  const note = row.querySelector('td:nth-child(4)').textContent;
+
+  return { jobName, salary, dateApplied, note };
+}
+
+// Function to remove entry from savedEntries array and local storage
+function removeEntry(entry) {
+  const index = savedEntries.findIndex(e => e.jobName === entry.jobName);
+  savedEntries.splice(index, 1);
+  localStorage.setItem("jobEntries", JSON.stringify(savedEntries));
+}
+
+// Function to save entry to local storage
+function saveEntry(entry) {
+  savedEntries.push(entry);
+  localStorage.setItem("jobEntries", JSON.stringify(savedEntries));
+}
+
+// Function to clear input fields
+function clearInputFields() {
+  jobNameInput.value = "";
+  salaryInput.value = "";
+  dateAppliedInput.value = "";
+  noteInput.value = "";
+}
+
+// Function to handle form submission
+function handleFormSubmit(event) {
   event.preventDefault();
 
-  // Get the values of the input elements
+  // Get input values
   const jobName = jobNameInput.value;
   const salary = salaryInput.value;
   const dateApplied = dateAppliedInput.value;
   const note = noteInput.value;
 
-  // Create a new table row element to display the job
-  const newRow = document.createElement("tr");
+  // Create an object for the current entry
+  const entry = { jobName, salary, dateApplied, note };
 
-  // Create new table data elements to display the job's data
-  const jobNameData = document.createElement("td");
-  jobNameData.textContent = jobName;
-  const salaryData = document.createElement("td");
-  salaryData.textContent = salary;
-  const dateAppliedData = document.createElement("td");
-  dateAppliedData.textContent = dateApplied;
-  const noteData = document.createElement("td");
-  noteData.textContent = note;
+  // Save the current entry to local storage
+  saveEntry(entry);
 
-  // Create a new table data element for the actions
-  const actionsData = document.createElement("td");
-
-// Create a "Save" button
-const saveButton = document.createElement("button");
-saveButton.classList.add("btn", "btn-success", "btn-sm", "spaced-buttons");
-saveButton.textContent = "Save";
-saveButton.addEventListener("click", function() {
-    // Save input values to local storage
-    localStorage.setItem("jobName", jobNameInput.value);
-    localStorage.setItem("salary", salaryInput.value);
-    localStorage.setItem("dateApplied", dateAppliedInput.value);
-    localStorage.setItem("note", noteInput.value);
-    
-    console.log(`Saving ${jobNameInput.value}`)
-});
-actionsData.appendChild(saveButton);
-
-
-  // Create a "Delete" button
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("btn", "btn-danger", "btn-sm", "spaced-buttons");
-  deleteButton.textContent = "Delete";
-  deleteButton.addEventListener("click", function() {
-    // code to handle delete button click event
-    console.log(`Deleting ${jobName}`)
-    newRow.remove();
-    localStorage.removeItem("jobName");
-    localStorage.removeItem("salary");
-    localStorage.removeItem("dateApplied");
-    localStorage.removeItem("note");
-  });
-  actionsData.appendChild(deleteButton);
-
-  // Append the data elements and the actions element to the new row
-  newRow.appendChild(jobNameData);
-  newRow.appendChild(salaryData);
-  newRow.appendChild(dateAppliedData);
-  newRow.appendChild(noteData);
-  newRow.appendChild(actionsData);
-
-  // Append the new row to the job list table
+  // Create and append the new table row
+  const newRow = createTableRow(entry);
   jobList.appendChild(newRow);
 
-  // Clear the input elements
-  jobNameInput.value = "";
-  salaryInput.value = "";
-  dateAppliedInput.value = "";
-  noteInput.value = "";
+  // Clear input elements
+  clearInputFields();
+}
+
+// Populate the job list with saved entries on page load
+savedEntries.forEach(entry => {
+  const newRow = createTableRow(entry);
+  jobList.appendChild(newRow);
 });
+
+// Listen for the form's submit event
+jobForm.addEventListener("submit", handleFormSubmit);
+
 
 // Get all the links with the class "nav-link"
 const navLinks = document.querySelectorAll('.nav-link');
@@ -124,3 +168,4 @@ navLinks.forEach(link => {
     });
   });
 });
+
